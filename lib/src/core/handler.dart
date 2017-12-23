@@ -33,8 +33,10 @@ class RpcEndpoint implements RpcRequestHandler {
   FutureOr<RpcResponse> handleRequest(RpcRequest request) {
     for (Route route in _handlers) {
       final RpcResponse resp = route.handleRequest(request);
-      if (resp is RpcResponse && resp.status != RpcStatus.notFound.value)
+      if (resp is RpcResponse && resp.status != RpcStatus.notFound.value) {
+        if(resp.id == null) resp.id = request.id;
         return resp;
+      }
     }
 
     return new RpcResponse.notFound(id: request.id);

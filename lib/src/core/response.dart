@@ -39,7 +39,7 @@ class RpcResponse {
     return new RpcResponse.decodeJsonMap(decoded);
   }
 
-  String encodeJson() {
+  Map<String, dynamic> get toMap {
     final map = <String, dynamic>{};
 
     map['what'] = what;
@@ -47,8 +47,10 @@ class RpcResponse {
     if (status != null) map['status'] = status;
     if (body != null) map['body'] = body;
 
-    return JSON.encode(map);
+    return map;
   }
+
+  String get toJson => JSON.encode(toMap);
 }
 
 class RpcStatus {

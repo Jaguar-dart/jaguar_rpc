@@ -1,7 +1,7 @@
 part of jaguar.rpc.core;
 
 RpcRequest request(String path,
-        {String id, Map<String, String> params, dynamic body}) =>
+        {String id, Map<String, dynamic> params, dynamic body}) =>
     new RpcRequest(path, id: id, params: params, body: body);
 
 class RpcRequest {
@@ -11,7 +11,7 @@ class RpcRequest {
 
   String path;
 
-  Map<String, String> params;
+  Map<String, dynamic> params;
 
   dynamic body;
 
@@ -26,7 +26,7 @@ class RpcRequest {
     if (map['what'] is String) what = map['what'];
     if (map['id'] is String) id = map['id'];
     if (map['path'] is String) path = map['path'];
-    if (map['params'] is Map<String, String>) params = map['params'];
+    if (map['params'] is Map<String, dynamic>) params = map['params'];
     if (map['body'] is String) body = map['body'];
   }
 
@@ -40,7 +40,7 @@ class RpcRequest {
     return new RpcRequest.decodeJsonMap(decoded);
   }
 
-  String encodeJson() {
+  Map<String, dynamic> get toMap {
     final map = <String, dynamic>{};
 
     map['what'] = what;
@@ -49,6 +49,8 @@ class RpcRequest {
     if (params != null) map['params'] = params;
     if (body != null) map['body'] = body;
 
-    return JSON.encode(map);
+    return map;
   }
+
+  String get toJson => JSON.encode(toMap);
 }
