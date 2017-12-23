@@ -1,0 +1,14 @@
+name: jaguar_rpc
+description: A simple JSON based RPC protocol
+version: 1.0.0
+homepage: https://github.com/Jaguar-dart/jaguar_rpc
+author: Ravi Teja Gudapati <tejainece@gmail.com>
+
+environment:
+  sdk: '>=1.20.1 <2.0.0'
+
+dependencies:
+  jaguar: '>=0.6.20 <1.0.0'
+
+dev_dependencies:
+  test: ^0.12.0
