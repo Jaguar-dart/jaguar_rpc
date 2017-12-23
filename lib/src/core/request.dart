@@ -27,7 +27,7 @@ class RpcRequest {
     if (map['id'] is String) id = map['id'];
     if (map['path'] is String) path = map['path'];
     if (map['params'] is Map<String, dynamic>) params = map['params'];
-    if (map['body'] is String) body = map['body'];
+    body = map['body'];
   }
 
   factory RpcRequest.decodeJson(String json) {
@@ -52,5 +52,5 @@ class RpcRequest {
     return map;
   }
 
-  String get toJson => JSON.encode(toMap);
+  String get json => JSON.encode(toMap);
 }

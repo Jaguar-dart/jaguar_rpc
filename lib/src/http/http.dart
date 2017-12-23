@@ -2,6 +2,10 @@ import 'dart:async';
 import 'package:jaguar/jaguar.dart';
 import 'package:jaguar_rpc/jaguar_rpc.dart';
 
+RpcOnHttp rpcOnHttp(RpcEndpoint endpoint) => new RpcOnHttp(endpoint);
+
+RpcToHttp rpcToHttp(RpcEndpoint endpoint) => new RpcToHttp(endpoint);
+
 /// Plain RPC on HTTP
 class RpcOnHttp implements RequestHandler {
   final RpcEndpoint endpoint;

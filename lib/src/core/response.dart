@@ -26,13 +26,13 @@ class RpcResponse {
       status = map['status'];
     else
       map['status'] = RpcStatus.success.value;
-    if (map['body'] is String) body = map['body'];
+    body = map['body'];
   }
 
   factory RpcResponse.decodeJson(String json) {
     final decoded = JSON.decode(json);
 
-    if (json is! Map)
+    if (decoded is! Map)
       throw new ArgumentError.value(
           json, 'json', 'Not a valid Jaguar RPC response!');
 
@@ -50,7 +50,7 @@ class RpcResponse {
     return map;
   }
 
-  String get toJson => JSON.encode(toMap);
+  String get json => JSON.encode(toMap);
 }
 
 class RpcStatus {

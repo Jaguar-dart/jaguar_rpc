@@ -30,3 +30,9 @@ main() {
   }
 }
 ```
+
+# TODO
+
++ [ ] HTTP interface
++ [ ] Websocket interface
++ [ ] TCP interface

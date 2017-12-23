@@ -26,6 +26,14 @@ main() {
   printSeparator();
 
   {
+    final RpcResponse resp = endpoint.handleRequest(request('/get/version'));
+    print(resp.status);
+    print(resp.body);
+  }
+
+  printSeparator();
+
+  {
     final RpcResponse resp = endpoint.handleRequest(request('/add/todo',
         body: new Contact(name: 'teja', email: 'tejainece@gmail.com').json));
     print(resp.status);
