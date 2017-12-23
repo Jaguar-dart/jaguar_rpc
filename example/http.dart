@@ -11,6 +11,7 @@ final Contacts contacts = new Contacts();
 main() async {
   int contactIdGen = 0;
 
+  // RPC endpoint
   final endpoint = new RpcEndpoint()
     ..route('/get/version', (_) => response(body: {'major': '1', 'minor': '0'}))
     ..route('/add/todo', (RpcRequest req) {
@@ -20,14 +21,14 @@ main() async {
       return response(body: contacts.json);
     });
 
+  // Serve the endpoint with Jaguar http server
   final server = new Jaguar();
   server.addApi(rpcOnHttp(endpoint));
-
   await server.serve();
 
+  // Client
   final client =
       new JsonClient(new http.IOClient(), basePath: 'http://localhost:8080/');
-
   {
     final resp =
         await client.post('/get/version', body: request('/get/version').toMap);
@@ -35,7 +36,6 @@ main() async {
     print(rpcResp.status);
     print(rpcResp.body);
   }
-
   {
     final resp = await client.post('/add/todo',
         body: request('/add/todo',
