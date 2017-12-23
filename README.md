@@ -52,6 +52,10 @@ main() async {
 
 > TODO
 
+## Isolate
+
+> TODO
+
 ## TCP
 
 > TODO
@@ -85,8 +89,12 @@ main() {
 }
 ```
 
+# Native extension
+
+> TODO
+
 # TODO
 
-+ [ ] HTTP interface
++ [X] HTTP interface
 + [ ] Websocket interface
 + [ ] TCP interface
