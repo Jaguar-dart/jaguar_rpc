@@ -2,12 +2,15 @@ import 'dart:async';
 import 'package:jaguar/jaguar.dart';
 import 'package:jaguar_rpc/jaguar_rpc.dart';
 
+/// Convenient function to create [RpcOnHttp] from a [RpcEndpoint]
 RpcOnHttp rpcOnHttp(RpcEndpoint endpoint) => new RpcOnHttp(endpoint);
 
+/// Convenient function to create [RpcToHttp] from a [RpcEndpoint]
 RpcToHttp rpcToHttp(RpcEndpoint endpoint) => new RpcToHttp(endpoint);
 
 /// Plain RPC on HTTP
 class RpcOnHttp implements RequestHandler {
+  /// Underlying RPC endpoint
   final RpcEndpoint endpoint;
 
   RpcOnHttp(this.endpoint);
@@ -20,10 +23,12 @@ class RpcOnHttp implements RequestHandler {
     return convertResponse(rpcResp);
   }
 
+  /// Utility function to convert [Context] to [RpcRequest]
   static Future<RpcRequest> convertRequest(Context ctx) async {
     return new RpcRequest.decodeJsonMap(await ctx.req.bodyAsJsonMap());
   }
 
+  /// Utility function to convert [RpcResponse] to [Response]
   static Response convertResponse(RpcResponse response) {
     if (response is! RpcResponse &&
         response.status == RpcStatus.notFound.value) {
@@ -36,6 +41,7 @@ class RpcOnHttp implements RequestHandler {
 
 /// Interprets HTTP as RPC
 class RpcToHttp implements RequestHandler {
+  /// Underlying RPC endpoint
   final RpcEndpoint endpoint;
 
   RpcToHttp(this.endpoint);
@@ -48,6 +54,7 @@ class RpcToHttp implements RequestHandler {
     return convertResponse(rpcResp);
   }
 
+  /// Utility function to convert [Context] to [RpcRequest]
   static Future<RpcRequest> convertRequest(Context ctx) async {
     final params = <String, dynamic>{};
     params.addAll(ctx.queryParams);
@@ -60,6 +67,7 @@ class RpcToHttp implements RequestHandler {
         params: params);
   }
 
+  /// Utility function to convert [RpcResponse] to [Response]
   static Response convertResponse(RpcResponse response) {
     final Response ret = Response.json(response.body);
     if (response.id != null) ret.headers.add('jrpcid', response.id);

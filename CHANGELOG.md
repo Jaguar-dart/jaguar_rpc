@@ -1,5 +1,8 @@
 # Changelog
 
-## 0.0.1
+## 1.0.0
 
-- Initial version, created by Stagehand
+- RPC request, response and request handler
+- RPC over HTTP
+- RPC over websocket
+- RPC websocket client

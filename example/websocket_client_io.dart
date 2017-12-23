@@ -1,8 +1,6 @@
 import 'package:jaguar/jaguar.dart';
 import 'package:jaguar_rpc/jaguar_rpc.dart';
-import 'package:jaguar_rpc/http.dart';
-import 'package:jaguar_client/jaguar_client.dart';
-import 'package:http/http.dart' as http;
+import 'package:jaguar_rpc/websocket.dart';
 
 import 'model/contact.dart';
 
@@ -23,26 +21,20 @@ main() async {
 
   // Serve the endpoint with Jaguar http server
   final server = new Jaguar();
-  server.addApi(rpcOnHttp(endpoint));
+  server.get('/ws', rpcOnWebSocket(endpoint));
   await server.serve();
 
   // Client
-  final client =
-      new JsonClient(new http.IOClient(), basePath: 'http://localhost:8080/');
+  final RpcWebSocketClient socket =
+      await RpcWebSocketClient.connect('ws://localhost:8080/ws');
   {
-    final resp =
-        await client.post('/get/version', body: request('/get/version').toMap);
-    final rpcResp = new RpcResponse.decodeJson(resp.bodyStr);
+    final RpcResponse rpcResp = await socket.send(request('/get/version'));
     print(rpcResp.status);
     print(rpcResp.body);
   }
   {
-    final resp = await client.post('/add/todo',
-        body: request('/add/todo',
-                body: new Contact(name: 'teja', email: 'tejainece@gmail.com')
-                    .toMap)
-            .toMap);
-    final rpcResp = new RpcResponse.decodeJson(resp.bodyStr);
+    final RpcResponse rpcResp = await socket.send(request('/add/todo',
+        body: new Contact(name: 'teja', email: 'tejainece@gmail.com').toMap));
     print(rpcResp.status);
     print(rpcResp.body);
   }

@@ -13,16 +13,16 @@ class Contact {
     email = json['email'];
   }
 
-  Map<String, dynamic> get json => {
-    'id': id,
-    'name': name,
-    'email': email,
-  };
+  Map<String, dynamic> get toMap => {
+        'id': id,
+        'name': name,
+        'email': email,
+      };
 }
 
 class Contacts {
   final contacts = <Contact>[];
 
   List<Map<String, dynamic>> get json =>
-      contacts.map((contact) => contact.json).toList();
+      contacts.map((contact) => contact.toMap).toList();
 }

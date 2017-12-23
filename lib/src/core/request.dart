@@ -33,7 +33,7 @@ class RpcRequest {
   factory RpcRequest.decodeJson(String json) {
     final decoded = JSON.decode(json);
 
-    if (json is! Map)
+    if (decoded is! Map)
       throw new ArgumentError.value(
           json, 'json', 'Not a valid Jaguar RPC request!');
 

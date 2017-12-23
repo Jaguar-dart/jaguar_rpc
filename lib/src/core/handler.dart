@@ -34,7 +34,7 @@ class RpcEndpoint implements RpcRequestHandler {
     for (Route route in _handlers) {
       final RpcResponse resp = route.handleRequest(request);
       if (resp is RpcResponse && resp.status != RpcStatus.notFound.value) {
-        if(resp.id == null) resp.id = request.id;
+        if (resp.id == null) resp.id = request.id;
         return resp;
       }
     }

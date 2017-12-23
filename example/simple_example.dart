@@ -35,7 +35,7 @@ main() {
 
   {
     final RpcResponse resp = endpoint.handleRequest(request('/add/todo',
-        body: new Contact(name: 'teja', email: 'tejainece@gmail.com').json));
+        body: new Contact(name: 'teja', email: 'tejainece@gmail.com').toMap));
     print(resp.status);
     print(resp.body);
   }
@@ -44,7 +44,7 @@ main() {
 
   {
     final RpcResponse resp = endpoint.handleRequest(request('/add/todo',
-        body: new Contact(name: 'kleak', email: 'kleak@gmail.com').json));
+        body: new Contact(name: 'kleak', email: 'kleak@gmail.com').toMap));
     print(resp.status);
     print(resp.body);
   }
