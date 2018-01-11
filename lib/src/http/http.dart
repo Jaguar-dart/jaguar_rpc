@@ -57,12 +57,12 @@ class RpcToHttp implements RequestHandler {
   /// Utility function to convert [Context] to [RpcRequest]
   static Future<RpcRequest> convertRequest(Context ctx) async {
     final params = <String, dynamic>{};
-    params.addAll(ctx.queryParams);
+    params.addAll(ctx.query);
     // TODO add path params to params
     // TODO add headers to params
 
     return new RpcRequest(ctx.path,
-        id: ctx.queryParams['jrpcid'],
+        id: ctx.query['jrpcid'],
         body: await ctx.req.bodyAsJson(),
         params: params);
   }
