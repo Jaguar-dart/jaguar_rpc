@@ -1,4 +1,3 @@
-import 'package:jaguar_rpc/jaguar_rpc.dart';
 import 'package:test/test.dart';
 
 void main() {
