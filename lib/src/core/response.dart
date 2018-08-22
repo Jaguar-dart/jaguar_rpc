@@ -17,9 +17,10 @@ class RpcResponse {
   RpcResponse.notFound({this.id}) : status = RpcStatus.notFound.value;
 
   RpcResponse.decodeJsonMap(Map<String, dynamic> map) {
+    print(map);
     if (map['what'] != 'JRPCS 1.0')
-      throw new ArgumentError.value(map, 'map',
-          'Not a valid Jaguar RPC response! "what" field has invalid value!');
+      throw new ArgumentError.value(map, 'map[\'what\']',
+          'Not a valid Jaguar RPC response! "what" field has invalid value');
 
     if (map['id'] is String) id = map['id'];
     if (map['status'] is int)
