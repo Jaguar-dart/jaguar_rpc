@@ -30,14 +30,14 @@ class RpcEndpoint {
       handlers.add(new RpcRoute(path, handler));
 
   /// Executes an appropriate [Handler] and returns the response
-  FutureOr<RpcResponse> handleRequest(RpcRequest request) async {
-    for (RpcRoute route in handlers) {
-      final RpcResponse resp = route.handleRequest(request);
+  FutureOr<RpcResponse> handleRequest(RpcRequest request) {
+    for (final route in handlers) {
+      final resp = route.handleRequest(request);
       if (resp is RpcResponse && resp.status != RpcStatus.notFound.value) {
         if (resp.id == null) resp.id = request.id;
         return resp;
       }
     }
-    return new RpcResponse.notFound(id: request.id);
+    return RpcResponse.notFound(id: request.id);
   }
 }
