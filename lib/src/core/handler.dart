@@ -21,24 +21,23 @@ class RpcRoute implements RpcRequestHandler {
 
 /// An RPC endpoint. Encapsulates a list of routes and executes the appropriate
 /// one based on the incoming request.
-class RpcEndpoint implements RpcRequestHandler {
+class RpcEndpoint {
   /// The list of composing [RpcRoute]s
-  final List<RpcRoute> _handlers = <RpcRoute>[];
+  final List<RpcRoute> handlers = <RpcRoute>[];
 
   /// Adds a new [RpcRoute] to the endpoint
   void route(String path, Handler handler) =>
-      _handlers.add(new RpcRoute(path, handler));
+      handlers.add(new RpcRoute(path, handler));
 
   /// Executes an appropriate [Handler] and returns the response
-  FutureOr<RpcResponse> handleRequest(RpcRequest request) {
-    for (RpcRoute route in _handlers) {
+  FutureOr<RpcResponse> handleRequest(RpcRequest request) async {
+    for (RpcRoute route in handlers) {
       final RpcResponse resp = route.handleRequest(request);
       if (resp is RpcResponse && resp.status != RpcStatus.notFound.value) {
         if (resp.id == null) resp.id = request.id;
         return resp;
       }
     }
-
     return new RpcResponse.notFound(id: request.id);
   }
 }
