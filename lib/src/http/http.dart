@@ -13,12 +13,7 @@ class RpcOnHttp implements RequestHandler {
   /// Underlying RPC endpoint
   final RpcEndpoint endpoint;
 
-  List<Route> _routes = [];
-
-  RpcOnHttp(this.endpoint) {
-  }
-
-  List<Route> get routes => _routes;
+  RpcOnHttp(this.endpoint);
 
   Future<Response> handleRequest(Context ctx, {String prefix}) async {
     final RpcRequest rpcReq = await convertRequest(ctx);
@@ -67,9 +62,7 @@ class RpcToHttp implements RequestHandler {
     // TODO add headers to params
 
     return new RpcRequest(ctx.path,
-        id: ctx.query['jrpcid'],
-        body: await ctx.bodyAsJson(),
-        params: params);
+        id: ctx.query['jrpcid'], body: await ctx.bodyAsJson(), params: params);
   }
 
   /// Utility function to convert [RpcResponse] to [Response]
