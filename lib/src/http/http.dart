@@ -3,10 +3,10 @@ import 'package:jaguar/jaguar.dart';
 import 'package:jaguar_rpc/src/core/core.dart';
 
 /// Convenient function to create [RpcOnHttp] from a [RpcEndpoint]
-List<Route> rpcOnHttp(RpcEndpoint endpoint) => new RpcOnHttp(endpoint).routes;
+List<Route> rpcOnHttp(RpcEndpoint endpoint) => RpcOnHttp(endpoint).routes;
 
 /// Convenient function to create [RpcToHttp] from a [RpcEndpoint]
-RpcToHttp rpcToHttp(RpcEndpoint endpoint) => new RpcToHttp(endpoint);
+List<Route> rpcToHttp(RpcEndpoint endpoint) => RpcToHttp(endpoint).routes;
 
 /// Plain RPC on HTTP
 class RpcOnHttp {
