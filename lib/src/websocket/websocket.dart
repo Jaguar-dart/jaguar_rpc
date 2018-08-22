@@ -11,9 +11,9 @@ RouteFunc rpcOnWebSocket(RpcEndpoint endpoint, {void onConnect(WebSocket ws)}) {
       final req = new RpcRequest.decodeJson(data);
       final resp = await endpoint.handleRequest(req);
       if (resp is! RpcResponse) {
-        websocket.add(new RpcResponse.notFound(id: req.id).json);
+        websocket.add(new RpcResponse.notFound(id: req.id).toJson);
       } else {
-        websocket.add(resp.json);
+        websocket.add(resp.toJson);
       }
     });
   };
@@ -57,7 +57,7 @@ class RpcWebSocketClient {
 
     final event = new OneTimeEvent<RpcResponse>(timeout);
     _event[newId] = event;
-    _socket.add(req.json);
+    _socket.add(req.toJson);
 
     return event.onDone;
   }
@@ -65,7 +65,8 @@ class RpcWebSocketClient {
   static Future<RpcWebSocketClient> connect(String url,
       {Iterable<String> protocols,
       Map<String, dynamic> headers,
-      CompressionOptions compression: CompressionOptions.DEFAULT}) async {
+      CompressionOptions compression:
+          CompressionOptions.compressionDefault}) async {
     final WebSocket socket = await WebSocket.connect(url,
         protocols: protocols, headers: headers, compression: compression);
     return new RpcWebSocketClient._(socket);
