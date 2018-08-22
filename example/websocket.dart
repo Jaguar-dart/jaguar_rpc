@@ -31,7 +31,7 @@ main() async {
   final Stream<RpcResponse> data =
       socket.asBroadcastStream().map((d) => new RpcResponse.decodeJson(d));
   {
-    socket.add(request('/get/version').json);
+    socket.add(request('/get/version').toJson);
     final RpcResponse rpcResp = await data.first;
     print(rpcResp.status);
     print(rpcResp.body);
@@ -39,7 +39,7 @@ main() async {
   {
     socket.add(request('/add/todo',
             body: new Contact(name: 'teja', email: 'tejainece@gmail.com').toMap)
-        .json);
+        .toJson);
     final RpcResponse rpcResp = await data.first;
     print(rpcResp.status);
     print(rpcResp.body);

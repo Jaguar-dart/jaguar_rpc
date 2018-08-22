@@ -1,15 +1,15 @@
 part of jaguar.rpc.core;
 
 /// A pair of [path] and the corresponding [Handler] [handler]
-class Route implements RpcRequestHandler {
+class RpcRoute implements RpcRequestHandler {
   /// The route path
   final String path;
 
   /// The request handler
   final Handler handler;
 
-  /// Constructs a [Route] from given [path] and [Handler] [handler]
-  const Route(this.path, this.handler);
+  /// Constructs a [RpcRoute] from given [path] and [Handler] [handler]
+  const RpcRoute(this.path, this.handler);
 
   /// Handles request
   FutureOr<RpcResponse> handleRequest(RpcRequest request) {
@@ -21,24 +21,23 @@ class Route implements RpcRequestHandler {
 
 /// An RPC endpoint. Encapsulates a list of routes and executes the appropriate
 /// one based on the incoming request.
-class RpcEndpoint implements RpcRequestHandler {
-  /// The list of composing [Route]s
-  final List<Route> _handlers = <Route>[];
+class RpcEndpoint {
+  /// The list of composing [RpcRoute]s
+  final List<RpcRoute> handlers = <RpcRoute>[];
 
-  /// Adds a new [Route] to the endpoint
+  /// Adds a new [RpcRoute] to the endpoint
   void route(String path, Handler handler) =>
-      _handlers.add(new Route(path, handler));
+      handlers.add(new RpcRoute(path, handler));
 
   /// Executes an appropriate [Handler] and returns the response
   FutureOr<RpcResponse> handleRequest(RpcRequest request) {
-    for (Route route in _handlers) {
-      final RpcResponse resp = route.handleRequest(request);
+    for (final route in handlers) {
+      final resp = route.handleRequest(request);
       if (resp is RpcResponse && resp.status != RpcStatus.notFound.value) {
         if (resp.id == null) resp.id = request.id;
         return resp;
       }
     }
-
-    return new RpcResponse.notFound(id: request.id);
+    return RpcResponse.notFound(id: request.id);
   }
 }

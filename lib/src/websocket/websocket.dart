@@ -4,16 +4,20 @@ import 'package:jaguar/jaguar.dart';
 import 'package:jaguar_rpc/jaguar_rpc.dart';
 
 /// Jaguar RPC on top of web socket
-RouteFunc rpcOnWebSocket(RpcEndpoint endpoint, {void onConnect(WebSocket ws)}) {
+RouteHandler rpcOnWebSocket(RpcEndpoint endpoint,
+    {void onConnect(Context ctx, WebSocket ws, )}) {
   return (Context ctx) async {
-    final WebSocket websocket = await ctx.req.upgradeToWebSocket;
+    final websocket = await ctx.req.upgradeToWebSocket;
+    if (onConnect != null) {
+      onConnect(ctx, websocket);
+    }
     websocket.listen((data) async {
       final req = new RpcRequest.decodeJson(data);
       final resp = await endpoint.handleRequest(req);
       if (resp is! RpcResponse) {
-        websocket.add(new RpcResponse.notFound(id: req.id).json);
+        websocket.add(new RpcResponse.notFound(id: req.id).toJson);
       } else {
-        websocket.add(resp.json);
+        websocket.add(resp.toJson);
       }
     });
   };
@@ -57,7 +61,7 @@ class RpcWebSocketClient {
 
     final event = new OneTimeEvent<RpcResponse>(timeout);
     _event[newId] = event;
-    _socket.add(req.json);
+    _socket.add(req.toJson);
 
     return event.onDone;
   }
@@ -65,7 +69,8 @@ class RpcWebSocketClient {
   static Future<RpcWebSocketClient> connect(String url,
       {Iterable<String> protocols,
       Map<String, dynamic> headers,
-      CompressionOptions compression: CompressionOptions.DEFAULT}) async {
+      CompressionOptions compression:
+          CompressionOptions.compressionDefault}) async {
     final WebSocket socket = await WebSocket.connect(url,
         protocols: protocols, headers: headers, compression: compression);
     return new RpcWebSocketClient._(socket);

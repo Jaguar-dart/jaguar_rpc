@@ -23,7 +23,7 @@ main() async {
 
   // Serve the endpoint with Jaguar http server
   final server = new Jaguar();
-  server.addApi(rpcOnHttp(endpoint));
+  server.add(rpcOnHttp(endpoint));
   await server.serve();
 
   // Client
@@ -31,18 +31,18 @@ main() async {
       new JsonClient(new http.IOClient(), basePath: 'http://localhost:8080/');
   {
     final resp =
-        await client.post('/get/version', body: request('/get/version').toMap);
-    final rpcResp = new RpcResponse.decodeJson(resp.bodyStr);
+        await client.post('get/version', body: request('/get/version').toMap);
+    final rpcResp = new RpcResponse.decodeJson(resp.body);
     print(rpcResp.status);
     print(rpcResp.body);
   }
   {
-    final resp = await client.post('/add/todo',
+    final resp = await client.post('add/todo',
         body: request('/add/todo',
                 body: new Contact(name: 'teja', email: 'tejainece@gmail.com')
                     .toMap)
             .toMap);
-    final rpcResp = new RpcResponse.decodeJson(resp.bodyStr);
+    final rpcResp = new RpcResponse.decodeJson(resp.body);
     print(rpcResp.status);
     print(rpcResp.body);
   }

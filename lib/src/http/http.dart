@@ -1,31 +1,35 @@
 import 'dart:async';
 import 'package:jaguar/jaguar.dart';
-import 'package:jaguar_rpc/jaguar_rpc.dart';
+import 'package:jaguar_rpc/src/core/core.dart';
 
 /// Convenient function to create [RpcOnHttp] from a [RpcEndpoint]
-RpcOnHttp rpcOnHttp(RpcEndpoint endpoint) => new RpcOnHttp(endpoint);
+List<Route> rpcOnHttp(RpcEndpoint endpoint) => RpcOnHttp(endpoint).routes;
 
 /// Convenient function to create [RpcToHttp] from a [RpcEndpoint]
-RpcToHttp rpcToHttp(RpcEndpoint endpoint) => new RpcToHttp(endpoint);
+List<Route> rpcToHttp(RpcEndpoint endpoint) => RpcToHttp(endpoint).routes;
 
 /// Plain RPC on HTTP
-class RpcOnHttp implements RequestHandler {
+class RpcOnHttp {
   /// Underlying RPC endpoint
   final RpcEndpoint endpoint;
 
-  RpcOnHttp(this.endpoint);
+  List<Route> routes = [];
 
-  Future<Response> handleRequest(Context ctx, {String prefix}) async {
-    final RpcRequest rpcReq = await convertRequest(ctx);
+  RpcOnHttp(this.endpoint) {
+    for (final handler in endpoint.handlers) {
+      routes.add(Route(handler.path, (ctx) => handleRequest(ctx, handler)));
+    }
+  }
 
-    final RpcResponse rpcResp = await endpoint.handleRequest(rpcReq);
-
-    return convertResponse(rpcResp);
+  Future<Response> handleRequest(Context ctx, RpcRoute handler) async {
+    final rpcRequest = await convertRequest(ctx);
+    final rpcResponse = handler.handleRequest(rpcRequest);
+    return convertResponse(rpcResponse);
   }
 
   /// Utility function to convert [Context] to [RpcRequest]
   static Future<RpcRequest> convertRequest(Context ctx) async {
-    return new RpcRequest.decodeJsonMap(await ctx.req.bodyAsJsonMap());
+    return new RpcRequest.decodeJsonMap(await ctx.bodyAsJsonMap());
   }
 
   /// Utility function to convert [RpcResponse] to [Response]
@@ -40,18 +44,22 @@ class RpcOnHttp implements RequestHandler {
 }
 
 /// Interprets HTTP as RPC
-class RpcToHttp implements RequestHandler {
+class RpcToHttp {
   /// Underlying RPC endpoint
   final RpcEndpoint endpoint;
 
-  RpcToHttp(this.endpoint);
+  List<Route> routes = [];
 
-  Future<Response> handleRequest(Context ctx, {String prefix}) async {
-    final RpcRequest rpcReq = await convertRequest(ctx);
+  RpcToHttp(this.endpoint) {
+    for (final handler in endpoint.handlers) {
+      routes.add(Route(handler.path, (ctx) => handleRequest(ctx, handler)));
+    }
+  }
 
-    final RpcResponse rpcResp = await endpoint.handleRequest(rpcReq);
-
-    return convertResponse(rpcResp);
+  Future<Response> handleRequest(Context ctx, RpcRoute handler) async {
+    final rpcRequest = await convertRequest(ctx);
+    final rpcResponse = handler.handleRequest(rpcRequest);
+    return convertResponse(rpcResponse);
   }
 
   /// Utility function to convert [Context] to [RpcRequest]
@@ -62,9 +70,7 @@ class RpcToHttp implements RequestHandler {
     // TODO add headers to params
 
     return new RpcRequest(ctx.path,
-        id: ctx.query['jrpcid'],
-        body: await ctx.req.bodyAsJson(),
-        params: params);
+        id: ctx.query['jrpcid'], body: await ctx.bodyAsJson(), params: params);
   }
 
   /// Utility function to convert [RpcResponse] to [Response]
