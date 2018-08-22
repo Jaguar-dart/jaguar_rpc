@@ -4,7 +4,7 @@ import 'package:jaguar/jaguar.dart';
 import 'package:jaguar_rpc/jaguar_rpc.dart';
 
 /// Jaguar RPC on top of web socket
-RouteFunc rpcOnWebSocket(RpcEndpoint endpoint, {void onConnect(WebSocket ws)}) {
+RouteHandler rpcOnWebSocket(RpcEndpoint endpoint, {void onConnect(WebSocket ws)}) {
   return (Context ctx) async {
     final WebSocket websocket = await ctx.req.upgradeToWebSocket;
     websocket.listen((data) async {
